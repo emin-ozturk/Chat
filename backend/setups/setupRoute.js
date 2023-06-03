@@ -2,6 +2,7 @@ const { requireAuth } = require('../middlewares/authMiddleWares')
 const channelRoutes = require('../routes/channelRoutes')
 const loginRoutes = require('../routes/loginRoutes')
 const logoutRoutes = require('../routes/logoutRoutes')
+const messageRoutes = require('../routes/messageRoutes')
 const singupRoutes = require('../routes/singupRoutes')
 
 const setup = (app) => {
@@ -10,6 +11,7 @@ const setup = (app) => {
     app.post('*', requireAuth)
     app.use('/channel', channelRoutes)
     app.use('/logout', logoutRoutes)
+    app.use('/message', messageRoutes)
     app.use('/singup', singupRoutes)
 }
 

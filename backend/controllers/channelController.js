@@ -11,20 +11,29 @@ const get_channel = async (req, res) => {
 
 const post_create_channel = async (req, res) => {
     const { name, description, userID } = req.body
-
     const channel = await new Channel({ name: name, description: description }).save()
     
     for (let i = 0; i < userID.length; i++) {
-        const channelUser = new ChannelUser()
-        channelUser.channelID = channel._id
-        channelUser.userID = userID[i]
-        channelUser.save()
+        await insertUserToChannel(userID[i], channel._id)
     }
-    
-    res.json({status: true, message: 'Kanal oluşturuldu'})
+    res.json({ status: true }) 
+}
+
+const post_insert_user = async (req, res) => {
+    const { userID, channelID } = req.body
+    await insertUserToChannel(userID, channelID)
+    res.json({ status: true }) 
+}
+
+const insertUserToChannel = (userID, channelID) => {
+    const channelUser = new ChannelUser()
+    channelUser.channelID = channelID
+    channelUser.userID = userID
+    channelUser.save()
 }
 
 module.exports = {
     get_channel,
-    post_create_channel
+    post_create_channel,
+    post_insert_user
 }

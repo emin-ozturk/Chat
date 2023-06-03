@@ -1,5 +1,6 @@
 const Channel = require('../models/channel')
 const ChannelUser = require('../models/channelUser')
+const User = require('../models/user')
 
 const get_channel = async (req, res) => {
     const currentUserID = req.res.locals.currentUserID
@@ -25,6 +26,15 @@ const post_insert_user = async (req, res) => {
     res.json({ status: true }) 
 }
 
+
+const get_channel_users = async (req, res) => {
+    const { channelID } = req.body
+    const userIDs = await ChannelUser.find({ channelID: channelID }).select('userID -_id')
+    const targetIds = userIDs.map(obj => obj.userID)
+    const users = await User.find({ _id: { $in: targetIds } })
+    res.json(users) 
+}
+
 const insertUserToChannel = (userID, channelID) => {
     const channelUser = new ChannelUser()
     channelUser.channelID = channelID
@@ -34,6 +44,7 @@ const insertUserToChannel = (userID, channelID) => {
 
 module.exports = {
     get_channel,
+    get_channel_users,
     post_create_channel,
     post_insert_user
 }

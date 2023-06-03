@@ -1,8 +1,16 @@
+const ChannelUser = require('../models/channelUser')
 const Message = require('../models/message')
 
-const get_message = (req, res) => {
+const get_message = async (req, res) => {
     const  { channelID } = req.body
-    Message.find({ channelID: channelID })
+    const currentUserID = req.res.locals.currentUserID
+    
+    const channelUser = await ChannelUser.findOne({ 
+            channelID: channelID, 
+            userID: currentUserID 
+        }).select('createdAt -_id')
+
+    Message.find({ channelID: channelID, createdAt: { $gt: channelUser.createdAt } })
         .then((messages) => { res.json({ messages }) })
         .catch((e) => { res.json({ status: false, error: e }) })
 }

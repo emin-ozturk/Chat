@@ -8,11 +8,15 @@ const get_message = async (req, res) => {
     const channelUser = await ChannelUser.findOne({ 
             channelID: channelID, 
             userID: currentUserID 
-        }).select('createdAt -_id')
-
-    Message.find({ channelID: channelID, createdAt: { $gt: channelUser.createdAt } })
-        .then((messages) => { res.json({ messages }) })
-        .catch((e) => { res.json({ status: false, error: e }) })
+        }).select('createdAt deletedAt -_id')
+    const startDate = channelUser.createdAt
+    const endDate = channelUser.deletedAt == null ? Date.now() : channelUser.deletedAt
+    Message.find({ 
+        channelID: channelID, 
+        createdAt: { $gt: startDate, $lt:  endDate } 
+    })  
+    .then((messages) => { res.json({ messages }) })
+    .catch((e) => { res.json({ status: false, error: e }) })
 }
 
 const post_create_message = (req, res) => {

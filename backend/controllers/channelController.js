@@ -26,7 +26,6 @@ const post_insert_user = async (req, res) => {
     res.json({ status: true }) 
 }
 
-
 const get_channel_users = async (req, res) => {
     const { channelID } = req.body
     const userIDs = await ChannelUser.find({ channelID: channelID }).select('userID -_id')
@@ -42,9 +41,19 @@ const insertUserToChannel = (userID, channelID) => {
     channelUser.save()
 }
 
+const post_leave_channel = (req, res) => {
+    const { channelID } = req.body
+    const currentUserID = req.res.locals.currentUserID
+    ChannelUser.updateOne({ channelID: channelID, userID: currentUserID }, { deletedAt: Date.now()})
+        .then(() => { res.json({ status: true }) })
+        .catch((e) => { res.json({ Error: e }) })
+ 
+}
+
 module.exports = {
     get_channel,
     get_channel_users,
     post_create_channel,
-    post_insert_user
+    post_insert_user,
+    post_leave_channel
 }

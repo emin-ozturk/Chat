@@ -5,7 +5,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='flex-1 h-full bg-hero flex flex-col items-center'>
+    <div className='flex-1 h-full bg-background flex flex-col items-center'>
       <span className="text-white text-4xl font-bold mt-32 mb-10">
         Hesabın yok mu?
       </span>

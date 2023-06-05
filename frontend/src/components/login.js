@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
+import { login } from '../api/utils';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -11,18 +11,16 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/login', {
-                username,
-                password,
-            });
-
-            if (response.data.status) {
+            const res = await login(username, password)
+            console.log(res)
+            if (res.response.data.status) {
 
                 navigate('/chat');
             } else {
-                setError('Kullanıcı adı veya şifre hatalı')
+                setError('Kullanıcı adı veya şifre hatalı');
             }
         } catch (error) {
+            setError('Server bağlanırken hata oluştu')
             console.error('API bağlantı hatası:', error);
         }
     };

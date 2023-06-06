@@ -1,6 +1,6 @@
 const User = require('../models/user')
 
-const post_singup = (req, res) => {
+const post_signup = (req, res) => {
     const { name, surname, email, password, username } = req.body
 
     if (name == '' || name == undefined) {
@@ -30,5 +30,5 @@ const post_singup = (req, res) => {
 }
 
 module.exports = {
-    post_singup
+    post_signup
 }

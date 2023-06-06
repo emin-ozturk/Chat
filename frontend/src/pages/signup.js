@@ -7,9 +7,27 @@ const Signup = () => {
     return (
         <div className="w-full h-full bg-background flex flex-col items-center">
             <div className='w-2/5 flex flex-col items-center'>
-            <span className="text-white text-4xl font-bold mt-32 mb-10">
+            <span className="text-white text-4xl font-bold mt-14 mb-10">
                 Kayıt ol
             </span>
+            <input
+                className="w-2/3 h-11 shadow-md mb-8 rounded-lg p-3 outline-none"
+                placeholder="Ad"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+                className="w-2/3 h-11 shadow-md mb-8 rounded-lg p-3 outline-none"
+                placeholder="Soyad"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+                className="w-2/3 h-11 shadow-md mb-8 rounded-lg p-3 outline-none"
+                placeholder="E posta"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+            />
             <input
                 className="w-2/3 h-11 shadow-md mb-8 rounded-lg p-3 outline-none"
                 placeholder="Kullanıcı adı"

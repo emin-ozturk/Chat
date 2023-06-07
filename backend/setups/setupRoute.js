@@ -7,12 +7,12 @@ const signupRoutes = require('../routes/signupRoutes')
 
 const setup = (app) => {
     app.use('/login', loginRoutes)
+    app.use('/signup', signupRoutes)
     app.get('*', requireAuth)
     app.post('*', requireAuth)
     app.use('/channel', channelRoutes)
     app.use('/logout', logoutRoutes)
     app.use('/message', messageRoutes)
-    app.use('/signup', signupRoutes)
 }
 
 module.exports = setup

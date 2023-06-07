@@ -10,8 +10,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.use(cors())
 
-app.listen(3000, () => {
-    console.log('3000 portunda server başladı')
+app.listen(4000, () => {
+    console.log('4000 portunda server başladı')
 })
 
 module.exports = app

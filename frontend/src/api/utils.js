@@ -6,19 +6,14 @@ const instance = axios.create({
     headers: { 'X-Custom-Header': 'foobar', 'Content-Type': 'application/json' }
 })
 
-const makeRequest = async (type, path, body) => {
+export const makeRequest = async (type, path, body) => {
     try {
         const response = await instance[type](path, body);
-        return { status: true, response };
+        return response;
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
+        return error.response;
     }
 }
 
-export const login = (username, password) => {
-    return makeRequest('post', 'login', {
-        username,
-        password
-    })
-}
 

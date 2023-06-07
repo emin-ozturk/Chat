@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
-import { login } from '../api/utils';
+import { login } from '../api/request';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -10,18 +10,11 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try {
-            const res = await login(username, password)
-            console.log(res)
-            if (res.response.data.status) {
-
-                navigate('/chat');
-            } else {
-                setError('Kullanıcı adı veya şifre hatalı');
-            }
-        } catch (error) {
-            setError('Server bağlanırken hata oluştu')
-            console.error('API bağlantı hatası:', error);
+        const res = await login(username, password)
+        if (res.status === 200) {
+            navigate('/chat');
+        } else if (res.status === 401) {
+            setError(res.data.message);
         }
     };
 

@@ -4,29 +4,29 @@ const post_signup = (req, res) => {
     const { name, surname, email, password, username } = req.body
 
     if (name == '' || name == undefined) {
-        return res.json({ status: false, message: 'Ad girilmedi' })
+        return res.status(401).json({ status: false, message: 'Ad girilmedi' })
     }
 
     if (surname == '' || surname == undefined) {
-        return res.json({ status: false, message: 'Soyad girilmedi' })
+        return res.status(401).json({ status: false, message: 'Soyad girilmedi' })
     }
 
     if (email == '' || email == undefined) {
-        return res.json({ status: false, message: 'E posta girilmedi' })
+        return res.status(401).json({ status: false, message: 'E posta girilmedi' })
     }
 
     if (password == '' || password == undefined) {
-        return res.json({ status: false, message: 'Şifre girilmedi' })
+        return res.status(401).json({ status: false, message: 'Şifre girilmedi' })
     }
 
     if (username == '' || username == undefined) {
-        return res.json({ status: false, message: 'Kullanıcı adı girilmedi' })
+        return res.status(401).json({ status: false, message: 'Kullanıcı adı girilmedi' })
     }
 
     const user = new User(req.body)
     user.save()
-        .then(() => { res.json({ status: true }) })
-        .catch((e) => { res.json({ status: false }) })
+        .then(() => { res.status(200).json({ status: true }) })
+        .catch((e) => { res.status(401).json({ status: false,message: 'Kullanıcı kayıt edilemedi' }) })
 }
 
 module.exports = {

@@ -8,20 +8,20 @@ const post_login = async (req, res) => {
     const { username, password } = req.body
     
     if (password == '' || password == undefined) {
-        return res.json({ status: false, message: 'Şifre girilmedi' })
+        return res.status(401).json({ message: 'Şifre girilmedi' })
     }
 
     if (username == '' || username == undefined) {
-        return res.json({ status: false, message: 'Kullanıcı adı girilmedi' })
+        return res.status(401).json({ message: 'Kullanıcı adı girilmedi' })
     }
 
     const isUser = await checkUser(username, password)
     if (isUser != null) {
         const token = await createToken(isUser)
         res.cookie('chatCookie', token, { httpOnly: true, maxAge: maxAge * 1000 })
-        res.json({ status: true })
+        res.status(200).json({ message: 'Giriş başarılı' })
     } else {
-        res.json({ status: false })
+        res.status(401).json({ message: 'Kullanıcı adı veya şifre hatalı' })
     }
 }
 

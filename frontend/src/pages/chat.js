@@ -1,19 +1,36 @@
 import React from 'react';
 import ChatArea from '../components/chatArea';
+import Message from '../components/message';
+import SelfMessage from '../components/selfMessage';
 
 const Chat = () => {
 
     const chats = [
-        { id: 11, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?'},
-        { id: 12, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı'},
-        { id: 13, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?'},
-        { id: 14, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı'},
-        { id: 15, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?'},
-        { id: 16, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı'},
-        { id: 17, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?'},
-        { id: 18, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı'}
+        { id: 11, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+        { id: 12, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+        { id: 13, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+        { id: 14, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+        { id: 15, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+        { id: 16, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+        { id: 17, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+        { id: 18, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' }
     ]
-    
+
+    const messages = [
+        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
+        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
+        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
+        { senderID: 1, sender: "Emin Öztürk", context: '3-Merhaba' },
+        { senderID: 2, sender: "Ali Yılmaz", context: '4-deneme' },
+        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
+        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
+        { senderID: 1, sender: "Emin Öztürk", context: '5-Merhaba nasılsın, iyi misin?' },
+        { senderID: 1, sender: "Emin Öztürk", context: '3-Merhaba' },
+        { senderID: 2, sender: "Ali Yılmaz", context: '4-deneme' },
+        { senderID: 1, sender: "Emin Öztürk", context: '5-Merhaba nasılsın, iyi misin?' },
+        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
+    ]
+
     return (
         <div className='w-full h-full flex flex-row'>
             <div className='w-2/6 h-full flex flex-col shadow-xl'>
@@ -21,19 +38,30 @@ const Chat = () => {
                     Chat
                 </div>
                 <div className='w-full flex-1 p-6 overflow-auto'>
-                    <ChatArea chats = { chats } />
+                    <ChatArea chats={chats} />
                 </div>
             </div>
 
             <div className='w-2/6 flex flex-1 flex-col'>
                 <div className='w-full h-12 shadow-md'>
-                
-                </div>
-                <div className='w-full flex-1'>
 
                 </div>
+                <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
+                    <div className='w-full flex-1 bg-slate-200 py-6 px-16 flex flex-col overflow-auto'>
+                        {messages.map((message, index) => {
+                            if (message.senderID === 1) {
+                               return <SelfMessage message={message} />
+                            } else {
+                               return  <Message message={message} />
+                            }
+                        })}
+                    </div>
+                    <div className='w-full h-12 flex items-center p-6'>
+
+                    </div>
+                </div>
             </div>
-        </div>
+        </div >
     )
 }
 

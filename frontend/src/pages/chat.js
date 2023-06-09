@@ -1,7 +1,8 @@
-import React from 'react';
 import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
+import React from 'react';
+import { currentUserID } from '../token';
 
 const Chat = () => {
 
@@ -44,7 +45,7 @@ const Chat = () => {
 
             <div className='w-2/6 flex flex-1 flex-col'>
                 <div className='w-full h-12 shadow-md'>
-
+                {currentUserID()}
                 </div>
                 <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                     <div className='w-full flex-1 bg-slate-200 py-6 px-16 flex flex-col overflow-auto'>

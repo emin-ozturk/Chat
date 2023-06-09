@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
+import { createToken } from '../token';
 import { login } from '../api/request';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ const Login = () => {
         e.preventDefault();
         const res = await login(username, password)
         if (res.status === 200) {
+            createToken(res.data.token)
             navigate('/chat');
         } else if (res.status === 401) {
             setError(res.data.message);

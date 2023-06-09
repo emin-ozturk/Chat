@@ -19,7 +19,7 @@ const post_login = async (req, res) => {
     if (isUser != null) {
         const token = await createToken(isUser)
         res.cookie('chatCookie', token, { httpOnly: true, maxAge: maxAge * 1000 })
-        res.status(200).json({ message: 'Giriş başarılı' })
+        res.status(200).json({ message: 'Giriş başarılı', token: token })
     } else {
         res.status(401).json({ message: 'Kullanıcı adı veya şifre hatalı' })
     }

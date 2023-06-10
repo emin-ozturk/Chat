@@ -1,10 +1,12 @@
+const { currentUserID } = require('../middlewares/authMiddleWares')
 const Channel = require('../models/channel')
 const ChannelUser = require('../models/channelUser')
 const User = require('../models/user')
 
 const get_channel = async (req, res) => {
-    const currentUserID = req.res.locals.currentUserID
-    const channelIDs = await ChannelUser.find({ userID: currentUserID }).select('channelID -_id')
+    const token = req.headers.authorization.split(' ')[1];
+    const userID = await currentUserID(token)
+    const channelIDs = await ChannelUser.find({ userID: userID }).select('channelID -_id')
     const targetIds = channelIDs.map(obj => obj.channelID)
     const channels = await Channel.find({ _id: { $in: targetIds } })
     res.json(channels)

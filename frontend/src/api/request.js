@@ -10,3 +10,7 @@ export const login = (username, password) => {
 export const signup = (user) => {
     return makeRequest('post', 'signup', user)
 }
+
+export const getChannel = () => {
+    return makeRequest('get', 'channel')
+}

@@ -1,21 +1,36 @@
 import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
-import React from 'react';
-import { currentUserID } from '../token';
+import React, { useState, useEffect } from 'react';
+import { getChannel } from '../api/request';
 
 const Chat = () => {
+    const [chats, setChats] = useState([]);
+    useEffect(() => {
 
-    const chats = [
-        { id: 11, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-        { id: 12, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-        { id: 13, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-        { id: 14, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-        { id: 15, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-        { id: 16, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-        { id: 17, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-        { id: 18, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' }
-    ]
+        const fetchChannel = async () => {
+            try {
+                const res = await getChannel();
+                const data = res.data;
+                setChats(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchChannel();
+
+    }, []);
+
+    // const chats = [
+    //     { id: 11, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+    //     { id: 12, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+    //     { id: 13, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+    //     { id: 14, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+    //     { id: 15, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+    //     { id: 16, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
+    //     { id: 17, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
+    //     { id: 18, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' }
+    // ]
 
     const messages = [
         { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
@@ -39,21 +54,22 @@ const Chat = () => {
                     Chat
                 </div>
                 <div className='w-full flex-1 p-6 overflow-auto'>
-                    <ChatArea chats={chats} />
+                    {chats.map((chat, index) => (
+                        <ChatArea chat={chat} />
+                    ))}
                 </div>
             </div>
 
             <div className='w-2/6 flex flex-1 flex-col'>
                 <div className='w-full h-12 shadow-md'>
-                {currentUserID()}
                 </div>
                 <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                     <div className='w-full flex-1 bg-slate-200 py-6 px-16 flex flex-col overflow-auto'>
                         {messages.map((message, index) => {
                             if (message.senderID === 1) {
-                               return <SelfMessage message={message} />
+                                return <SelfMessage message={message} />
                             } else {
-                               return  <Message message={message} />
+                                return <Message message={message} />
                             }
                         })}
                     </div>

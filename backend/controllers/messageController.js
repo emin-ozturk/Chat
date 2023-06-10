@@ -1,18 +1,21 @@
+const { currentUserID } = require('../middlewares/authMiddleWares')
 const ChannelUser = require('../models/channelUser')
 const Message = require('../models/message')
 
 const get_message = async (req, res) => {
     const  { channelID } = req.body
-    const currentUserID = req.res.locals.currentUserID
-    
+    const token = req.headers.authorization.split(' ')[1];
+    const userID = await currentUserID(token)
+    console.log(channelID, userID)
+
     const channelUser = await ChannelUser.findOne({ 
-            channelID: channelID, 
-            userID: currentUserID 
+            channelID: "647b7dd61a7e5f4bd102659c", 
+            userID: userID 
         }).select('createdAt deletedAt -_id')
     const startDate = channelUser.createdAt
     const endDate = channelUser.deletedAt == null ? Date.now() : channelUser.deletedAt
     Message.find({ 
-        channelID: channelID, 
+        channelID: "647b7dd61a7e5f4bd102659c", 
         createdAt: { $gt: startDate, $lt:  endDate } 
     })  
     .then((messages) => { res.json({ messages }) })

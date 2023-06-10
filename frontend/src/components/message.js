@@ -14,10 +14,10 @@ const Message = (props) => {
                             text-sm 
                             text-white'>
                 <div className='font-bold text-sky-800'>
-                    {props.message.sender}
+                    {props.message.senderID}
                 </div>
                 <div>
-                    {props.message.context}
+                    {props.message.content}
                 </div>
             </div>
         </div>

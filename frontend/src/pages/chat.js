@@ -2,10 +2,11 @@ import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
 import React, { useState, useEffect } from 'react';
-import { getChannel } from '../api/request';
+import { getChannel, getChannelMessages } from '../api/request';
 
 const Chat = () => {
     const [chats, setChats] = useState([]);
+    const [channelMessages, setChannelMessages] = useState([]);
     useEffect(() => {
 
         const fetchChannel = async () => {
@@ -21,31 +22,20 @@ const Chat = () => {
 
     }, []);
 
-    // const chats = [
-    //     { id: 11, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-    //     { id: 12, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-    //     { id: 13, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-    //     { id: 14, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-    //     { id: 15, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-    //     { id: 16, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' },
-    //     { id: 17, name: 'Emin Öztürk', date: '12.14', message: 'Merhaba nasılsın, iyi misin?' },
-    //     { id: 18, name: 'Ali Yılmaz', date: '10.09', message: 'Deneme mesajı' }
-    // ]
+    const fetchChannelMessages = async (channelID) => {
+        try {
+            const res = await getChannelMessages(channelID);
+            const messages = res.data.messages;
+            setChannelMessages(messages);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-    const messages = [
-        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
-        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
-        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
-        { senderID: 1, sender: "Emin Öztürk", context: '3-Merhaba' },
-        { senderID: 2, sender: "Ali Yılmaz", context: '4-deneme' },
-        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
-        { senderID: 2, sender: "Ali Yılmaz", context: '2-Merhaba iyiyim' },
-        { senderID: 1, sender: "Emin Öztürk", context: '5-Merhaba nasılsın, iyi misin?' },
-        { senderID: 1, sender: "Emin Öztürk", context: '3-Merhaba' },
-        { senderID: 2, sender: "Ali Yılmaz", context: '4-deneme' },
-        { senderID: 1, sender: "Emin Öztürk", context: '5-Merhaba nasılsın, iyi misin?' },
-        { senderID: 1, sender: "Emin Öztürk", context: '1-Merhaba nasılsın, iyi misin?' },
-    ]
+    const handleChatClick = (channelID) => {
+        fetchChannelMessages(channelID)
+    };
+
 
     return (
         <div className='w-full h-full flex flex-row'>
@@ -55,7 +45,7 @@ const Chat = () => {
                 </div>
                 <div className='w-full flex-1 p-6 overflow-auto'>
                     {chats.map((chat, index) => (
-                        <ChatArea chat={chat} />
+                        <ChatArea chat={chat} onChatClick={handleChatClick} />
                     ))}
                 </div>
             </div>
@@ -65,8 +55,9 @@ const Chat = () => {
                 </div>
                 <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                     <div className='w-full flex-1 bg-slate-200 py-6 px-16 flex flex-col overflow-auto'>
-                        {messages.map((message, index) => {
-                            if (message.senderID === 1) {
+                        {channelMessages.map((message, index) => {
+                            console.log(message)
+                            if (message.senderID === '647a009c65e5a90c8ae269b6') {
                                 return <SelfMessage message={message} />
                             } else {
                                 return <Message message={message} />

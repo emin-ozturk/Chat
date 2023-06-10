@@ -14,3 +14,9 @@ export const signup = (user) => {
 export const getChannel = () => {
     return makeRequest('get', 'channel')
 }
+
+export const getChannelMessages = (channelID) => {
+    return makeRequest('get', 'message', {
+        channelID,
+    })
+}

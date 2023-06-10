@@ -1,7 +1,7 @@
 import React from "react";
 
-const Chat = (props) => {
-    const { chat } = props;
+const ChatArea = (props) => {
+    const { chat, onChatClick } = props;
 
     const formatDate = (dateTimeString) => {
         const date = new Date(dateTimeString);
@@ -9,11 +9,16 @@ const Chat = (props) => {
         const formattedTime = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
         return `${formattedDate} ${formattedTime}`;
     };
+
+    const handleChatClick = () => {
+        onChatClick(chat._id);
+    };
+
     return (
         <div>
             <div
                 className='w-full h-20 flex flex-row border-b-2 p-2 hover:bg-gray-50 hover:cursor-pointer'
-                onClick={() => { console.log(chat._id) }}>
+                onClick={handleChatClick}>
                 <div className='w-16 h-full shadow-lg rounded-full mr-4'>
                     <div className='w-full h-full bg-user bg-top bg-cover rounded-full'></div>
                 </div>
@@ -35,4 +40,4 @@ const Chat = (props) => {
     )
 }
 
-export default Chat;
+export default ChatArea;

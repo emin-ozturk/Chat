@@ -14,7 +14,7 @@ const Message = (props) => {
                             text-sm 
                             text-white'>
                 <div className='font-bold text-sky-800'>
-                    {props.message.senderID}
+                    {props.message.sender.name + ' ' + props.message.sender.surname}
                 </div>
                 <div>
                     {props.message.content}

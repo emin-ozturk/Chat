@@ -70,7 +70,7 @@ const Chat = () => {
                 <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                     <div className='w-full flex-1 bg-slate-200 py-6 px-16 flex flex-col overflow-auto'>
                         {channelMessages.map((message, index) => {
-                            if (message.senderID === currentUserID) {
+                            if (message.sender.id === currentUserID) {
                                 return <SelfMessage message={message} />
                             } else {
                                 return <Message message={message} />

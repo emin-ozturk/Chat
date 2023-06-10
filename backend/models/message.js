@@ -3,9 +3,9 @@ const Schema = mongoose.Schema
 
 const messageSchema = new Schema({
     senderID: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User', 
         require: true,
-        default: null
     },
     channelID: {
         type: String,

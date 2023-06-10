@@ -4,6 +4,7 @@ const loginRoutes = require('../routes/loginRoutes')
 const logoutRoutes = require('../routes/logoutRoutes')
 const messageRoutes = require('../routes/messageRoutes')
 const signupRoutes = require('../routes/signupRoutes')
+const userRoutes = require('../routes/userRoutes')
 
 const setup = (app) => {
     app.use('/login', loginRoutes)
@@ -13,6 +14,7 @@ const setup = (app) => {
     app.use('/channel', channelRoutes)
     app.use('/logout', logoutRoutes)
     app.use('/message', messageRoutes)
+    app.use('/user', userRoutes)
 }
 
 module.exports = setup

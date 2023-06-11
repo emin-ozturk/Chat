@@ -5,17 +5,17 @@ const Message = require('../models/message')
 
 const get_message = async (req, res) => {
     // const { channelID } = req.body;
+    console.log(req.body);
     const channelID = "647b7dd61a7e5f4bd102659c";
     const token = req.headers.authorization.split(' ')[1]
     const userID = await currentUserID(token);
-    console.log(channelID, userID);
 
     const channelUser = await ChannelUser.findOne({
         channelID: channelID,
         userID: userID
     }).select('createdAt deletedAt -_id')
 
-    const channel = await Channel.findOne({ _id: channelID }).select('name -_id');
+    const channel = await Channel.findOne({ _id: channelID }).select('name');
     const startDate = channelUser.createdAt;
     const endDate = channelUser.deletedAt == null ? Date.now() : channelUser.deletedAt;
 
@@ -45,6 +45,7 @@ const get_message = async (req, res) => {
             res.json({ 
                 messages: formattedMessages, 
                 channel: {
+                    id: channel._id,
                     name: channel.name
                 }, 
             });
@@ -55,13 +56,12 @@ const get_message = async (req, res) => {
     
 };
 
-
-
-const post_create_message = (req, res) => {
+const post_create_message = async (req, res) => {
     const { channelID, content } = req.body
-    const currentUserID = req.res.locals.currentUserID
+    const token = req.headers.authorization.split(' ')[1]
+    const userID = await currentUserID(token);
     const message = new Message()
-    message.senderID = currentUserID
+    message.senderID = userID
     message.channelID = channelID
     message.content = content
     message.save()

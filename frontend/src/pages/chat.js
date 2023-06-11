@@ -2,13 +2,14 @@ import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
 import React, { useState, useEffect } from 'react';
-import { getChannel, getChannelMessages, getCurrentUserID } from '../api/request';
+import { getChannel, getChannelMessages, getCurrentUserID, sendMessage } from '../api/request';
 
 const Chat = () => {
     const [chats, setChats] = useState([]);
     const [channel, setChannel] = useState([]);
     const [channelMessages, setChannelMessages] = useState([]);
     const [currentUserID, setCurrentUserID] = useState([]);
+    const [message, setMessage] = useState([]);
 
     useEffect(() => {
 
@@ -52,6 +53,16 @@ const Chat = () => {
         fetchChannelMessages(channelID)
     };
 
+    const handleSendMessage = async () => {
+        try {
+            const res = await sendMessage(channel.id, message);
+            const data = res.data;
+            console.log(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className='w-full h-full flex flex-row bg-bg1 '>
             <div className='w-2/6 h-full flex justify-center items-center p-4'>
@@ -87,32 +98,28 @@ const Chat = () => {
                             })}
                         </div>
                         <div className='w-full h-14 flex items-center pb-12'>
-                            <div className='w-full m-24 shadow-md rounded-xl '>
-                                <div class="relative">
-                                    <input className="block 
-                                                w-full 
+                            <div className='w-full m-24 shadow-md rounded-xl flex flex-row bg-white'>
+                                <input className="w-full
                                                 p-4 
-                                                pl-6
                                                 text-sm 
-                                                bg-white
-                                                rounded-xl
-                                                outline-none"
-                                        placeholder="Mesaj yaz" />
-                                    <button type="submit"
-                                        className="text-white 
-                                                absolute 
-                                                right-2.5 
-                                                bottom-2.5 
+                                                outline-none
+                                                rounded-xl"
+                                    placeholder="Mesaj yaz"
+                                    onChange={(e) => setMessage(e.target.value)} />
+                                <button type="submit"
+                                    className="flex-1 text-white 
                                                 bg-blue-700 
                                                 hover:bg-blue-800 
                                                 font-medium 
                                                 rounded-lg 
                                                 text-sm 
                                                 px-4 
-                                                py-2">
-                                        Gönder
-                                    </button>
-                                </div>
+                                                py-2
+                                                m-2
+                                                ml-0"
+                                    onClick={handleSendMessage}>
+                                    Gönder
+                                </button>
                             </div>
                         </div>
                     </div>

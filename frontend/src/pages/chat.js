@@ -1,7 +1,7 @@
 import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { getChannel, getChannelMessages, getCurrentUserID, sendMessage } from '../api/request';
 
 const Chat = () => {
@@ -10,6 +10,7 @@ const Chat = () => {
     const [channelMessages, setChannelMessages] = useState([]);
     const [currentUserID, setCurrentUserID] = useState([]);
     const [message, setMessage] = useState([]);
+    const chatAreaRef = useRef(null);
 
     useEffect(() => {
 
@@ -38,22 +39,32 @@ const Chat = () => {
 
     }, []);
 
+    useEffect(() => {
+        scrollToBottom();
+    }, [channelMessages]);
+
+
     const fetchChannelMessages = async (channelID) => {
         try {
             const res = await getChannelMessages(channelID);
             const data = res.data;
-            setChannel(data.channel)
+            setChannel(data.channel);
             setChannelMessages(data.messages);
         } catch (error) {
             console.log(error);
         }
     };
 
+    const scrollToBottom = () => {
+        if (chatAreaRef.current) {
+            chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+        }
+    }
+
     const handleSendMessage = async () => {
         try {
-            const res = await sendMessage(channel.id, message);
-            const data = res.data;
-            console.log(data)
+            await sendMessage(channel.id, message);
+            setMessage([]);
         } catch (error) {
             console.log(error);
         }
@@ -84,7 +95,7 @@ const Chat = () => {
                         {channel.name}
                     </div>
                     <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
-                        <div className='w-full flex-1 py-6 px-24 flex flex-col overflow-auto'>
+                        <div className='w-full flex-1 py-6 px-24 flex flex-col overflow-auto' ref={chatAreaRef}>
                             {channelMessages.map((message, index) => {
                                 if (message.sender.id === currentUserID) {
                                     return <SelfMessage message={message} />
@@ -101,6 +112,7 @@ const Chat = () => {
                                                 outline-none
                                                 rounded-xl"
                                     placeholder="Mesaj yaz"
+                                    value={message}
                                     onChange={(e) => setMessage(e.target.value)} />
                                 <button type="submit"
                                     className="flex-1 text-white 

@@ -1,23 +1,26 @@
 const { currentUserID } = require('../middlewares/authMiddleWares')
+const Channel = require('../models/channel')
 const ChannelUser = require('../models/channelUser')
 const Message = require('../models/message')
 
 const get_message = async (req, res) => {
-    const { channelID } = req.body;
-    const token = req.headers.authorization.split(' ')[1];
+    // const { channelID } = req.body;
+    const channelID = "647b7dd61a7e5f4bd102659c";
+    const token = req.headers.authorization.split(' ')[1]
     const userID = await currentUserID(token);
     console.log(channelID, userID);
 
     const channelUser = await ChannelUser.findOne({
-        channelID: "647b7dd61a7e5f4bd102659c",
+        channelID: channelID,
         userID: userID
-    }).select('createdAt deletedAt -_id');
+    }).select('createdAt deletedAt -_id')
 
+    const channel = await Channel.findOne({ _id: channelID }).select('name -_id');
     const startDate = channelUser.createdAt;
     const endDate = channelUser.deletedAt == null ? Date.now() : channelUser.deletedAt;
 
     Message.find({
-        channelID: "647b7dd61a7e5f4bd102659c",
+        channelID: channelID,
         createdAt: { $gt: startDate, $lt: endDate }
     })
         .populate({
@@ -38,12 +41,18 @@ const get_message = async (req, res) => {
                     createdAt: message.createdAt
                 };
             });
-
-            res.json({ messages: formattedMessages });
+    
+            res.json({ 
+                messages: formattedMessages, 
+                channel: {
+                    name: channel.name
+                }, 
+            });
         })
         .catch((e) => {
             res.json({ status: false, error: e });
         });
+    
 };
 
 

@@ -10,7 +10,6 @@ const messageSchema = new Schema({
     channelID: {
         type: String,
         require: true,
-        default: null
     },
     content: {
         type: String,

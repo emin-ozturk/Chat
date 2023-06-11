@@ -16,9 +16,7 @@ export const getChannel = () => {
 }
 
 export const getChannelMessages = (channelID) => {
-    return makeRequest('get', 'message', {
-        channelID,
-    })
+    return makeRequest('get', `message/${channelID}`);
 }
 
 export const getCurrentUserID = () => {

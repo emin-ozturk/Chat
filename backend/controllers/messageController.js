@@ -4,9 +4,7 @@ const ChannelUser = require('../models/channelUser')
 const Message = require('../models/message')
 
 const get_message = async (req, res) => {
-    // const { channelID } = req.body;
-    console.log(req.body);
-    const channelID = "647b7dd61a7e5f4bd102659c";
+    const { channelID } = req.params;
     const token = req.headers.authorization.split(' ')[1]
     const userID = await currentUserID(token);
 

@@ -49,10 +49,6 @@ const Chat = () => {
         }
     };
 
-    const handleChatClick = (channelID) => {
-        fetchChannelMessages(channelID)
-    };
-
     const handleSendMessage = async () => {
         try {
             const res = await sendMessage(channel.id, message);
@@ -72,7 +68,7 @@ const Chat = () => {
                     </div>
                     <div className='w-full flex-1 p-6 overflow-auto'>
                         {chats.map((chat, index) => (
-                            <ChatArea chat={chat} onChatClick={handleChatClick} />
+                            <ChatArea chat={chat} onChatClick={fetchChannelMessages} />
                         ))}
                     </div>
                 </div>

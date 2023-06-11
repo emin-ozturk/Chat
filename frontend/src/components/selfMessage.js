@@ -7,6 +7,7 @@ const SelfMessage = (props) => {
             <div
                 className='bg-blue-400 
                             w-auto 
+                            max-w-md
                             inline-block 
                             py-2 
                             px-3 

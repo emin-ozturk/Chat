@@ -7,6 +7,7 @@ const Message = (props) => {
             <div
                 className='bg-white
                             w-auto 
+                            max-w-md
                             inline-block 
                             py-2 
                             px-4 

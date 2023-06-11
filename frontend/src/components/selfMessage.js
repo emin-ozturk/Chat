@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDate } from '../utils'
 
 const SelfMessage = (props) => {
     return (
@@ -7,16 +8,21 @@ const SelfMessage = (props) => {
                 className='bg-blue-400 
                             w-auto 
                             inline-block 
-                            p-3 
+                            py-2 
+                            px-3 
                             rounded-xl 
                             rounded-br-none 
-                            mb-2 text-sm 
-                            text-white'>
-                <div className='font-bold text-sky-800'>
-                    {props.message.sender.name + ' ' + props.message.sender.surname}
-                </div>
+                            mb-2 
+                            text-sm 
+                            text-white
+                            shadow-lg'>
                 <div>
-                    {props.message.content}
+                    <div>
+                        {props.message.content}
+                    </div>
+                    <div className="text-gray-200 text-s">
+                        {formatDate(props.message.createdAt)}
+                    </div>
                 </div>
             </div>
         </div>

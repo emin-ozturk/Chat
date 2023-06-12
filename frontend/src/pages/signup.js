@@ -28,9 +28,9 @@ const Signup = () => {
     }
 
     return (
-        <div className="w-full h-full bg-background flex flex-col items-center">
+        <div className="w-full h-full bg-bg1 flex flex-col items-center">
             <div className='w-2/5 flex flex-col items-center'>
-                <span className="text-white text-4xl font-bold mt-14 mb-10">
+                <span className="text-slate-600 text-4xl font-bold mt-14 mb-10">
                     Kayıt ol
                 </span>
                 <input
@@ -63,6 +63,7 @@ const Signup = () => {
                     placeholder="Şifre"
                     type="password"
                     value={password}
+                    autoComplete="new-password"
                     onChange={(e) => setPassword(e.target.value)}
                 />
 

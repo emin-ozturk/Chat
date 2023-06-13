@@ -1,7 +1,7 @@
 const setupExpress = require('./setups/setupExpress')
 const setupMongoDB = require('./setups/setupMongoDB')
-const setupRoute = require('./setups/setupRoute')
+const setupSocket = require('./setups/setupSocket')
 
-const app = setupExpress
+const server = setupExpress
 setupMongoDB
-setupRoute(app)
+setupSocket.setup(server)

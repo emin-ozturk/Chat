@@ -23,9 +23,3 @@ export const getCurrentUserID = () => {
     return makeRequest('get', 'user/current-user-id')
 }
 
-export const sendMessage = (channelID, message) => {
-    return makeRequest('post', 'message/create-message', {
-        channelID,
-        content: message
-    })
-}

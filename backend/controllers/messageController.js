@@ -29,9 +29,9 @@ const get_message = async (req, res) => {
         .then((messages) => {
             const formattedMessages = messages.map((message) => {
                 return {
-                    id: message._id,
+                    _id: message._id,
                     sender: {
-                        id: message.senderID._id,
+                        _id: message.senderID._id,
                         name: message.senderID.name,
                         surname: message.senderID.surname
                     },
@@ -43,7 +43,7 @@ const get_message = async (req, res) => {
             res.json({ 
                 messages: formattedMessages, 
                 channel: {
-                    id: channel._id,
+                    _id: channel._id,
                     name: channel.name
                 }, 
             });
@@ -54,20 +54,6 @@ const get_message = async (req, res) => {
     
 };
 
-const post_create_message = async (req, res) => {
-    const { channelID, content } = req.body
-    const token = req.headers.authorization.split(' ')[1]
-    const userID = await currentUserID(token);
-    const message = new Message()
-    message.senderID = userID
-    message.channelID = channelID
-    message.content = content
-    message.save()
-        .then(() => { res.json({ status: true }) })
-        .catch((e) => { res.json({ status: false, error: e }) })
-}
-
 module.exports = {
-    get_message,
-    post_create_message
+    get_message
 }

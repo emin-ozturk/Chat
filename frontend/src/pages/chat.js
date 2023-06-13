@@ -2,7 +2,11 @@ import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
 import React, { useRef, useState, useEffect } from 'react';
-import { getChannel, getChannelMessages, getCurrentUserID, sendMessage } from '../api/request';
+import socketIOClient from 'socket.io-client';
+import { getChannel, getChannelMessages, getCurrentUserID } from '../api/request';
+import { getToken } from '../token';
+
+const socket = socketIOClient('http://localhost:4000');
 
 const Chat = () => {
     const [chats, setChats] = useState([]);
@@ -13,7 +17,23 @@ const Chat = () => {
     const chatAreaRef = useRef(null);
 
     useEffect(() => {
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
+    const handleSendMessage = () => {
+        socket.emit('newMessage', { 
+            channelID: channel._id, 
+            content: message,
+            token: getToken()
+        }, (ackData) => {
+            setChannelMessages(channelMessages => [...channelMessages, ackData.messages]);
+        });
+        setMessage('');
+    };
+
+    useEffect(() => {
         const fetchChannel = async () => {
             try {
                 const res = await getChannel();
@@ -61,15 +81,6 @@ const Chat = () => {
         }
     }
 
-    const handleSendMessage = async () => {
-        try {
-            await sendMessage(channel.id, message);
-            setMessage([]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     return (
         <div className='w-full h-full flex flex-row bg-bg1 '>
             <div className='w-2/6 h-full flex justify-center items-center p-4'>
@@ -97,7 +108,7 @@ const Chat = () => {
                     <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                         <div className='w-full flex-1 py-6 px-24 flex flex-col overflow-auto' ref={chatAreaRef}>
                             {channelMessages.map((message, index) => {
-                                if (message.sender.id === currentUserID) {
+                                if (message.sender._id === currentUserID) {
                                     return <SelfMessage message={message} />
                                 } else {
                                     return <Message message={message} />

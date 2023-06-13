@@ -16,7 +16,7 @@ const setup = (server) => {
 
 const watchSocket = (io) => {
     io.on('connection', (socket) => {
-        socket.on('newMessage', async (data, ack) => {
+        socket.on('newMessage', async (data) => {
             const { channelID, content, token } = data
 
             const userID = await currentUserID(token)
@@ -26,18 +26,15 @@ const watchSocket = (io) => {
                 'content': content
             })
 
-            Message.findOne({ _id: message._id, })
+            const newMessage = await Message.findOne({ _id: message._id, })
                 .populate({
                     path: 'senderID',
                     select: 'name surname'
                 })
                 .select('senderID content createdAt')
-                .then(async (message) => {
-                    ack(createResponse(message));
-                })
-                .catch((e) => {
-                    console.log(e)
-                });
+                .catch((e) => { console.log(e) });
+
+            io.emit('newMessage', createResponse(newMessage))
         });
     });
 }

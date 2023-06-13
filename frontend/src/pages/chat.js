@@ -2,11 +2,11 @@ import ChatArea from '../components/chatArea';
 import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
 import React, { useRef, useState, useEffect } from 'react';
-import socketIOClient from 'socket.io-client';
+import socketIO from 'socket.io-client';
 import { getChannel, getChannelMessages, getCurrentUserID } from '../api/request';
 import { getToken } from '../token';
 
-const socket = socketIOClient('http://localhost:4000');
+const socket = socketIO.connect('http://localhost:4000');
 
 const Chat = () => {
     const [chats, setChats] = useState([]);
@@ -15,24 +15,26 @@ const Chat = () => {
     const [channelUsers, setChannelUsers] = useState([]);
     const [currentUserID, setCurrentUserID] = useState([]);
     const [message, setMessage] = useState([]);
+    const [tempMessage, setTempMessage] = useState([]);
+    const [isChat, setIsChat] = useState(false);
     const chatAreaRef = useRef(null);
-
-    useEffect(() => {
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
 
     const handleSendMessage = () => {
         socket.emit('newMessage', {
             channelID: channel._id,
             content: message,
             token: getToken()
-        }, (ackData) => {
-            setChannelMessages(channelMessages => [...channelMessages, ackData.messages]);
         });
         setMessage('');
     };
+
+    socket.on('newMessage', (data) => {
+        setTempMessage(data.messages)
+    })
+
+    useEffect(() => {
+       setChannelMessages(channelMessages => [...channelMessages, tempMessage]);
+    }, [tempMessage]);
 
     useEffect(() => {
         const fetchChannel = async () => {
@@ -71,7 +73,8 @@ const Chat = () => {
             const data = res.data;
             setChannel(data.channel);
             setChannelMessages(data.messages);
-            setChannelUsers(data.channelUsers)
+            setChannelUsers(data.channelUsers);
+            setIsChat(true);
         } catch (error) {
             console.log(error);
         }
@@ -98,7 +101,7 @@ const Chat = () => {
                 </div>
             </div>
 
-            {channelMessages.length === 0 ? (
+            {!isChat ? (
                 <div className='flex-1 h-full flex justify-center items-center text-lg'>
                     Mesajlaşmaya başlamak için bir sohbet seç veya yeni bir sohbet oluştur.
                 </div>

@@ -26,6 +26,9 @@ const Chat = () => {
     }
 
     const handleSendMessage = () => {
+        if (message == '') {
+            return
+        }
         socket.emit('newMessage', {
             channelID: channel._id,
             content: message,

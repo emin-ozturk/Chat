@@ -1,6 +1,6 @@
 const { currentUserID } = require('../middlewares/authMiddleWares')
-const Message = require('../models/message')
 const Channel = require('../models/channel')
+const Message = require('../models/message')
 const socket = require('socket.io')
 
 const setup = (server) => {
@@ -20,7 +20,6 @@ const watchSocket = (io) => {
             const { channelID, content, token } = data
 
             const userID = await currentUserID(token)
-            const channel = await getChannel(channelID)
             const message = await createMessage({
                 'senderID': userID,
                 'channelID': channelID,
@@ -34,7 +33,7 @@ const watchSocket = (io) => {
                 })
                 .select('senderID content createdAt')
                 .then(async (message) => {
-                    ack(createResponse(message, channel));
+                    ack(createResponse(message));
                 })
                 .catch((e) => {
                     console.log(e)
@@ -47,11 +46,7 @@ const createMessage = async (message) => {
     return await new Message(message).save()
 }
 
-const getChannel = async (channelID) => {
-    return await Channel.findOne({ _id: channelID }).select('name');
-}
-
-const createResponse = (message, channel) => {
+const createResponse = (message) => {
     return {
         messages: {
             _id: message._id,
@@ -62,10 +57,6 @@ const createResponse = (message, channel) => {
             },
             content: message.content,
             createdAt: message.createdAt
-        },
-        channel: {
-            _id: channel._id,
-            name: channel.name
         },
     }
 }

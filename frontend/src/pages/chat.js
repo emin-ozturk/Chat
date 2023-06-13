@@ -12,6 +12,7 @@ const Chat = () => {
     const [chats, setChats] = useState([]);
     const [channel, setChannel] = useState([]);
     const [channelMessages, setChannelMessages] = useState([]);
+    const [channelUsers, setChannelUsers] = useState([]);
     const [currentUserID, setCurrentUserID] = useState([]);
     const [message, setMessage] = useState([]);
     const chatAreaRef = useRef(null);
@@ -23,8 +24,8 @@ const Chat = () => {
     }, []);
 
     const handleSendMessage = () => {
-        socket.emit('newMessage', { 
-            channelID: channel._id, 
+        socket.emit('newMessage', {
+            channelID: channel._id,
             content: message,
             token: getToken()
         }, (ackData) => {
@@ -70,6 +71,7 @@ const Chat = () => {
             const data = res.data;
             setChannel(data.channel);
             setChannelMessages(data.messages);
+            setChannelUsers(data.channelUsers)
         } catch (error) {
             console.log(error);
         }
@@ -102,8 +104,15 @@ const Chat = () => {
                 </div>
             ) : (
                 <div className='w-2/6 flex flex-1 flex-col'>
-                    <div className='w-full h-12 flex items-center pt-6 px-24'>
-                        {channel.name}
+                    <div className='w-full h-auto flex flex-col pt-6 px-24'>
+                        <div className=''>
+                            {channel.name}
+                        </div>
+                        <div className='text-sm mb-2'>
+                            {channelUsers.map((user, index) => (
+                                user.name + ' ' + user.surname + (index + 1 === channelUsers.length ? '' : ', ')
+                            ))}
+                        </div>
                     </div>
                     <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                         <div className='w-full flex-1 py-6 px-24 flex flex-col overflow-auto' ref={chatAreaRef}>

@@ -19,6 +19,12 @@ const Chat = () => {
     const [isChat, setIsChat] = useState(false);
     const chatAreaRef = useRef(null);
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSendMessage()
+        }
+    }
+
     const handleSendMessage = () => {
         socket.emit('newMessage', {
             channelID: channel._id,
@@ -33,7 +39,7 @@ const Chat = () => {
     })
 
     useEffect(() => {
-       setChannelMessages(channelMessages => [...channelMessages, tempMessage]);
+        setChannelMessages(channelMessages => [...channelMessages, tempMessage]);
     }, [tempMessage]);
 
     useEffect(() => {
@@ -136,7 +142,8 @@ const Chat = () => {
                                                 rounded-xl"
                                     placeholder="Mesaj yaz"
                                     value={message}
-                                    onChange={(e) => setMessage(e.target.value)} />
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    onKeyDown={handleKeyDown} />
                                 <button type="submit"
                                     className="flex-1 text-white 
                                                 bg-blue-700 

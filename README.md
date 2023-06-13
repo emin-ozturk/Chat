@@ -2,11 +2,11 @@
 
 **Backend**
 
->Node.js, Express.js, socket.io
+>Node.js, Express.js, Mongoose, Socket.io
 
 **Frontend**
 
->React, Tailwind CSS, socket.io-client
+>React, Tailwind CSS, Socket.io-client
 
 **Database**
 

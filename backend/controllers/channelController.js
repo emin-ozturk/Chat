@@ -24,7 +24,7 @@ const get_channel = async (req, res) => {
                     name: channel.name,
                     description: channel.description,
                     createdAt: channel.createdAt,
-                    lastMessage: lastMessage
+                    lastMessage: lastMessage || null
                 }
             }))
 

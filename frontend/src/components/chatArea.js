@@ -22,20 +22,27 @@ const ChatArea = (props) => {
                             {chat.name}
                         </div>
                         <div>
-                            {formatDate(chat.lastMessage.createdAt)}
+                            {(
+                                chat.lastMessage
+                                    ? formatDate(chat.lastMessage.createdAt)
+                                    : ''
+                            )}
                         </div>
                     </div>
-                    <div className="flex flex-row">
-                        <div className="mr-1 text-black">
-                            {
-                                chat.lastMessage.senderID.name + ' ' +
-                                chat.lastMessage.senderID.surname + ': '
-                            }
+                    {(chat.lastMessage ?
+                        <div className="flex flex-row">
+                            <div className="mr-1 text-black">
+                                {
+                                    chat.lastMessage.senderID.name + ' ' +
+                                    chat.lastMessage.senderID.surname + ': '
+                                }
+                            </div>
+                            <div className="text-gray-600">
+                                {chat.lastMessage.content}
+                            </div>
                         </div>
-                        <div className="text-gray-600">
-                            { chat.lastMessage.content }
-                        </div>
-                    </div>
+                        : <div></div>
+                    )}
                 </div>
             </div>
         </div>

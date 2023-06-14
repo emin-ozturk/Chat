@@ -26,8 +26,8 @@ const Chat = () => {
     }
 
     const handleSendMessage = () => {
-        if (message == '') {
-            return
+        if (message === '') {
+            return;
         }
         socket.emit('newMessage', {
             channelID: channel._id,
@@ -43,19 +43,10 @@ const Chat = () => {
 
     useEffect(() => {
         setChannelMessages(channelMessages => [...channelMessages, tempMessage]);
+        fetchChannel();
     }, [tempMessage]);
 
     useEffect(() => {
-        const fetchChannel = async () => {
-            try {
-                const res = await getChannel();
-                const data = res.data;
-                setChats(data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
         const fetchCurrentUserID = async () => {
             try {
                 const res = await getCurrentUserID();
@@ -70,6 +61,17 @@ const Chat = () => {
         fetchCurrentUserID();
 
     }, []);
+
+    const fetchChannel = async () => {
+        try {
+            const res = await getChannel();
+            const data = res.data;
+            console.log(data)
+            setChats(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
         scrollToBottom();
@@ -117,7 +119,7 @@ const Chat = () => {
             ) : (
                 <div className='w-2/6 flex flex-1 flex-col'>
                     <div className='w-full h-auto flex flex-col pt-6 px-24'>
-                        <div className=''>
+                        <div className='font-bold'>
                             {channel.name}
                         </div>
                         <div className='text-sm mb-2'>

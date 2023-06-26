@@ -17,6 +17,7 @@ const Chat = () => {
     const [currentUser, setCurrentUser] = useState([]);
     const [message, setMessage] = useState([]);
     const [tempMessage, setTempMessage] = useState([]);
+    const [currentChannelID, setCurrentChannelID] = useState('');
 
     const [isChat, setIsChat] = useState(false);
     const [isCreateChannel, setIsCreateChannel] = useState(false);
@@ -41,6 +42,10 @@ const Chat = () => {
     };
 
     socket.on('newMessage', (data) => {
+        console.log(data.messages._id, currentChannelID, data)
+        if (data.messages.channelID !== currentChannelID) {
+            return;
+        }
         setTempMessage(data.messages)
     })
 
@@ -82,6 +87,7 @@ const Chat = () => {
 
     const fetchChannelMessages = async (channelID) => {
         try {
+            setCurrentChannelID(channelID)
             const res = await getChannelMessages(channelID);
             const data = res.data;
             setChannel(data.channel);
@@ -145,7 +151,7 @@ const Chat = () => {
             </div>
 
             {!isChat ? (
-                <div className='flex-1 h-full flex justify-center items-center text-lg'>
+                <div className='flex-1 h-full flex justify-center items-center text-lg text-center'>
                     Mesajlaşmaya başlamak için bir sohbet seç veya yeni bir sohbet oluştur.
                 </div>
             ) : (

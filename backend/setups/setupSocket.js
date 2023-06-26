@@ -31,7 +31,7 @@ const watchSocket = (io) => {
                     path: 'senderID',
                     select: 'name surname'
                 })
-                .select('senderID content createdAt')
+                .select('senderID content createdAt channelID')
                 .catch((e) => { console.log(e) });
 
             io.emit('newMessage', createResponse(newMessage))
@@ -53,7 +53,8 @@ const createResponse = (message) => {
                 surname: message.senderID.surname
             },
             content: message.content,
-            createdAt: message.createdAt
+            createdAt: message.createdAt,
+            channelID: message.channelID
         },
     }
 }

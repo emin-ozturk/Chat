@@ -3,8 +3,9 @@ import Message from '../components/message';
 import SelfMessage from '../components/selfMessage';
 import React, { useRef, useState, useEffect } from 'react';
 import socketIO from 'socket.io-client';
-import { getChannel, getChannelMessages, getCurrentUserID } from '../api/request';
+import { getChannel, getChannelMessages, getCurrentUser } from '../api/request';
 import { getToken } from '../token';
+import CreateChannel from '../components/createChannel';
 
 const socket = socketIO.connect('http://localhost:4000');
 
@@ -13,10 +14,12 @@ const Chat = () => {
     const [channel, setChannel] = useState([]);
     const [channelMessages, setChannelMessages] = useState([]);
     const [channelUsers, setChannelUsers] = useState([]);
-    const [currentUserID, setCurrentUserID] = useState([]);
+    const [currentUser, setCurrentUser] = useState([]);
     const [message, setMessage] = useState([]);
     const [tempMessage, setTempMessage] = useState([]);
+
     const [isChat, setIsChat] = useState(false);
+    const [isCreateChannel, setIsCreateChannel] = useState(false);
     const chatAreaRef = useRef(null);
 
     const handleKeyDown = (event) => {
@@ -47,18 +50,18 @@ const Chat = () => {
     }, [tempMessage]);
 
     useEffect(() => {
-        const fetchCurrentUserID = async () => {
+        const fetchCurrentUser = async () => {
             try {
-                const res = await getCurrentUserID();
+                const res = await getCurrentUser();
                 const data = res.data;
-                setCurrentUserID(data.currentUserID)
+                setCurrentUser(data.currentUser)
             } catch (error) {
                 console.log(error);
             }
         };
 
         fetchChannel();
-        fetchCurrentUserID();
+        fetchCurrentUser();
 
     }, []);
 
@@ -66,7 +69,6 @@ const Chat = () => {
         try {
             const res = await getChannel();
             const data = res.data;
-            console.log(data)
             setChats(data);
         } catch (error) {
             console.log(error);
@@ -97,14 +99,44 @@ const Chat = () => {
         }
     }
 
+    const handleNewChannel = () => {
+        setIsCreateChannel(true);
+    }
+
+    const handleCloseDialog = () => {
+        setIsCreateChannel(false);
+        fetchChannel();
+    }
+
     return (
         <div className='w-full h-full flex flex-row bg-bg1 '>
+            {(isCreateChannel ?
+                <CreateChannel currentUser = {currentUser} onCloseDialogClick={handleCloseDialog} />
+                : ''
+            )}
+
             <div className='w-2/6 h-full flex justify-center items-center p-4'>
-                <div className='w-full h-full flex flex-col shadow-2xl rounded-3xl bg-white'>
-                    <div className='w-full h-12 flex items-center p-8 font-bold text-2xl font-sans'>
+                <div className='w-full h-full flex flex-col shadow-2xl rounded-3xl bg-white p-6'>
+                    <div className='w-full 
+                                    h-12 
+                                    border 
+                                    border-dashed 
+                                    border-1 
+                                    border-sky-400
+                                    text-sky-400
+                                    rounded-lg 
+                                    flex 
+                                    justify-center 
+                                    items-center
+                                    cursor-pointer
+                                    hover:bg-slate-100'
+                        onClick={handleNewChannel}>
+                        Yeni sohbet
+                    </div>
+                    <div className='w-full h-12 flex items-center py-10 font-bold text-2xl font-sans'>
                         Chat
                     </div>
-                    <div className='w-full flex-1 p-6 overflow-auto'>
+                    <div className='w-full flex-1 overflow-auto'>
                         {chats.map((chat, index) => (
                             <ChatArea chat={chat} onChatClick={fetchChannelMessages} />
                         ))}
@@ -131,7 +163,7 @@ const Chat = () => {
                     <div className='w-full flex-1 flex-col flex justify-between overflow-hidden'>
                         <div className='w-full flex-1 py-6 px-24 flex flex-col overflow-auto' ref={chatAreaRef}>
                             {channelMessages.map((message, index) => {
-                                if (message.sender._id === currentUserID) {
+                                if (message.sender._id === currentUser._id) {
                                     return <SelfMessage message={message} />
                                 } else {
                                     return <Message message={message} />
